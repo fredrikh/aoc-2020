@@ -5,9 +5,8 @@ export const countValid = (
 
 const rx = /(\d+)-(\d+) ([a-z]): ([a-z]+)/
 
-export const validatordOne = (policyPassword: string) => {
+export const validatorOne = (policyPassword: string) => {
   const [, min, max, char, pwd] = rx.exec(policyPassword)!
-
   const freq = [...pwd].filter((c) => c === char).length
 
   return Number(min) <= freq && freq <= Number(max)
@@ -15,7 +14,6 @@ export const validatordOne = (policyPassword: string) => {
 
 export const validatorTwo = (policyPassword: string) => {
   const [, posA, posB, char, pwd] = rx.exec(policyPassword)!
-
   const charA = pwd[Number(posA) - 1]
   const charB = pwd[Number(posB) - 1]
 
