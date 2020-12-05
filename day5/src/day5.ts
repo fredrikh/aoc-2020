@@ -11,12 +11,8 @@ const toSeatNumber = (s: string): Seat => {
   return { row: toDec(row), col: toDec(col) }
 }
 
-const toDec = (bin: boolean[]) => {
-  let result = 0
-  while (bin.length) result = (result << 1) | (bin.shift() ? 1 : 0)
-
-  return result
-}
+const toDec = (bin: boolean[]) =>
+  bin.reduce((result, bit) => (result << 1) | (bit ? 1 : 0), 0)
 
 const asc = (a: number, b: number) => a - b
 
