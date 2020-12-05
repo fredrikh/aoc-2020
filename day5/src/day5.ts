@@ -13,10 +13,8 @@ const toSeatNumber = (s: string): Seat => {
 
 const toDec = (bin: boolean[]) => {
   let result = 0
-  while (bin.length) {
-    result <<= 1
-    result |= bin.shift() ? 1 : 0
-  }
+  while (bin.length) result = (result << 1) | (bin.shift() ? 1 : 0)
+
   return result
 }
 
