@@ -68,14 +68,12 @@ const navigate2 = (pos: Pos, instruction: Instruction): Pos => {
       return { ...pos, y: pos.y - instruction.value }
     case 'W':
       return { ...pos, x: pos.x - instruction.value }
-    case 'F':
+    case 'L':
+      return rotate(pos, toRad(instruction.value))
+    case 'R':
+      return rotate(pos, toRad(-instruction.value))
+    default:
       return pos
-    default: {
-      const t = degToRad(
-        (instruction.action === 'L' ? 1 : -1) * instruction.value
-      )
-      return rotate(pos, t)
-    }
   }
 }
 
@@ -90,7 +88,7 @@ const turn = (
   return directions[(i + rights) % 4]
 }
 
-const degToRad = (deg: number) => (deg * Math.PI) / 180
+const toRad = (deg: number) => (deg * Math.PI) / 180
 
 const rotate = (pos: Pos, t: number): Pos => {
   // 𝑥2=cos𝛽𝑥1−sin𝛽𝑦1𝑦2=sin𝛽𝑥1+cos𝛽𝑦1
