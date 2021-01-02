@@ -1,7 +1,7 @@
 export default class Tile {
   readonly _id: number
   private _rows: string[][]
-
+  private _matches: number[]
   private _size: number
 
   constructor(tileString: string) {
@@ -9,6 +9,11 @@ export default class Tile {
     this._id = Number(idRow.match(/\d+/)![0]) || 0
     this._rows = tileRows.map((row) => [...row])
     this._size = tileRows.length
+    this._matches = []
+  }
+
+  addMatch(matchingId: number) {
+    this._matches.push(matchingId)
   }
 
   get id(): number {
@@ -53,13 +58,12 @@ export default class Tile {
     return this
   }
 
+  get connections(): number {
+    return this._matches.length
+  }
+
   get borders(): string[] {
     const borders: string[] = []
-    for (let i = 0; i < 4; i++) {
-      borders.push(this.topBorder)
-      this.rotateL()
-    }
-    this.flipH()
     for (let i = 0; i < 4; i++) {
       borders.push(this.topBorder)
       this.rotateL()

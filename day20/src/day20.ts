@@ -1,50 +1,36 @@
 import Tile from './tile'
 
-export const foo = (input: string[]) => {
-  const tiles = input.map((s) => new Tile(s))
-  console.log(getCorners(tiles).reduce((a, b) => a * b))
+export const foo = (input: string[]) =>
+  matchTiles(input.map((s) => new Tile(s))).reduce((a, b) => a * b)
+
+export const foo2 = (input: string[]) => {
+  console.log(matchTiles(input.map((s) => new Tile(s))))
 }
 
-const getCorners = (tiles: Tile[]) => {
-  const borderCount: Record<number, number> = {}
+const matchTiles = (tiles: Tile[]) => {
   for (let i = 0; i < tiles.length - 1; i++) {
     for (let j = i + 1; j < tiles.length; j++) {
       const a = tiles[i]
       const b = tiles[j]
-      if (hasMatchingBorders(a, b)) {
-        // console.log('hasMatching borders', a.id, b.id)
-        if (borderCount[a.id]) {
-          borderCount[a.id] += 1
-        } else {
-          borderCount[a.id] = 1
-        }
-        if (borderCount[b.id]) {
-          borderCount[b.id] += 1
-        } else {
-          borderCount[b.id] = 1
-        }
+      const matchingBorder = getMatchingBorder(a, b)
+      if (matchingBorder.length) {
+        a.addMatch(b.id)
+        b.addMatch(a.id)
       }
     }
   }
-  const corners: number[] = []
-
-  for (let id in borderCount)
-    if (borderCount[id] === 2) corners.push(parseInt(id))
-
-  return corners
+  return tiles.filter((tile) => tile.connections === 2).map((tile) => tile.id)
 }
 
-const intersection = (setA: Set<string>, setB: Set<string>) => {
+const intersection = (a: string[], b: string[]) => {
+  const setA = new Set(a)
+  const setB = new Set(b)
   let _intersection = new Set()
   for (let elem of setB) {
     if (setA.has(elem)) _intersection.add(elem)
   }
-  return _intersection
+  return [..._intersection]
 }
 
-const hasMatchingBorders = (a: Tile, b: Tile) => {
-  let bordersA = new Set(a.borders)
-  let bordersB = new Set(b.borders)
-
-  return intersection(bordersA, bordersB).size > 0
-}
+const getMatchingBorder = (a: Tile, b: Tile) =>
+  intersection(a.borders, [...b.borders, ...b.flipH().borders])
